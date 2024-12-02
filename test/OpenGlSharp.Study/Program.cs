@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 using OpenGlSharp;
 using OpenGlSharp.Extensions;
+using OpenGlSharp.Helper;
 using Serilog;
-using OpenGlSharp.LogExtension;
 using OpenGlSharp.Models;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
@@ -33,66 +33,58 @@ window.Load += () =>
 {
     var gl = GL.GetApi(window);
 
-    gl.ClearColor(Color.White);
+    gl.ClearColor(Color.Gray);
 
     // ebo
     uint[] index = [
-        0, 1, 3,
+        0, 1, 2,
         1, 2, 3];
     ebo = new BufferObject<uint>(gl, index, BufferTargetARB.ElementArrayBuffer);
 
     // vbo
     float[] vertices = [
-        0.5f,  0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
-        -0.5f,  0.5f, 0.5f, 0.0f, 0.0f
-    ];
+        0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f];
     vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
 
+    shader = new Shader(gl, ShaderHelper.VertexShader, ShaderHelper.FragmentShader);
+
     abo = new VertextArrrayObject<float, uint>(gl, vbo, ebo);
-    abo.VertexAttributePointer(0, 3, VertexAttribPointerType.Float, 5, 0);
-    abo.VertexAttributePointer(1, 2, VertexAttribPointerType.Float, 5, 3);
-
-
-
-    shader = new Shader(
-        gl,
-        """
-        #version 330 core
-        layout(location = 0) in vec3 pos;
-
-        void main(){
-           	gl_Position = vec4(pos.x,pos.y,pos.z,1.0);
-        }
-        """,
-        """
-        #version 330 core
-         
-        out vec4 color;
-         
-        void main(){
-            color = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-        }
-        """);
+    abo.AddVertexAttributePointer(VertexAttribPointerType.Float, 6, 3, 0);
+    abo.AddVertexAttributePointer(VertexAttribPointerType.Float, 6, 3, 3);
 };
+
+var t = DateTime.Now;
+var T = 3;
 
 window.Update += v =>
 {
     var gl = GL.GetApi(window);
 
+    if ((DateTime.Now - t).Seconds >= T)
+        t = DateTime.Now;
+
     gl.Clear(ClearBufferMask.ColorBufferBit);
     abo?.Bind();
     shader?.Use();
+
+    var scale = (float)(2 * Math.PI * (DateTime.Now - t).TotalMilliseconds / (T * 1000f));
+    gl.Uniform1(gl.GetUniformLocation(shader!.Handle, "time"), scale);
+
     unsafe
     {
-        gl.DrawElements(PrimitiveType.Lines, (uint)2, DrawElementsType.UnsignedInt, null);
-
+        gl.DrawElements(PrimitiveType.Triangles, 3, DrawElementsType.UnsignedInt, null);
     }
-
 
     //gl.DrawElements(PrimitiveType.Triangles, 6, GLEnum.UnsignedInt, 0);
     //gl.DrawArrays(GLEnum.Triangles, 0, 3);
+};
+
+window.Resize += size =>
+{
+    var gl = GL.GetApi(window);
+    gl.Viewport(size);
 };
 
 window.Run();

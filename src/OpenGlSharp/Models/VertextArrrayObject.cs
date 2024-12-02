@@ -15,6 +15,8 @@ public class VertextArrrayObject<TVboType, TEboType> : IDisposable
 
     private readonly uint _handle = 0;
 
+    private uint _defaltIndex = 0;
+
     public VertextArrrayObject(GL gl, BufferObject<TVboType> vbo, BufferObject<TEboType> ebo)
     {
         _gl = gl;
@@ -45,6 +47,19 @@ public class VertextArrrayObject<TVboType, TEboType> : IDisposable
             false,
             count * (uint)sizeof(TVboType),
             (void*)(offset * (uint)sizeof(TVboType)));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="total">每组数据总个数</param>
+    /// <param name="elements">当前组数据的element数量</param>
+    /// <param name="offset">element相较于每组数据的偏移</param>
+    public void AddVertexAttributePointer(VertexAttribPointerType type, uint total, int elements, uint offset)
+    {
+        VertexAttributePointer(_defaltIndex, elements, type, total, offset);
+        _defaltIndex++;
     }
 
     public void Bind() => _gl.BindVertexArray(_handle);

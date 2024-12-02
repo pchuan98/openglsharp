@@ -31,12 +31,7 @@ public class Shader : IDisposable
         _gl.DeleteShader(fragmentShader);
     }
 
-    public void Use()
-    {
-        _gl.UseProgram(_handle);
-
-        Serilog.Log.Information("User the shader {index}", _handle);
-    }
+    public void Use() => _gl.UseProgram(_handle);
 
     public uint Handle => _handle;
 
