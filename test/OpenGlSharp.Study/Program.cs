@@ -69,8 +69,9 @@ window.Update += v =>
     abo?.Bind();
     shader?.Use();
 
-    var scale = (float)(2 * Math.PI * (DateTime.Now - t).TotalMilliseconds / (T * 1000f));
-    gl.Uniform1(gl.GetUniformLocation(shader!.Handle, "time"), scale);
+    shader?.Uniform1(
+        "time",
+        (float)(2 * Math.PI * (DateTime.Now - t).TotalMilliseconds / (T * 1000f)));
 
     unsafe
     {

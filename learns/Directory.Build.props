@@ -1,0 +1,17 @@
+<Project >
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<NoWarn>NU1903;NU1902</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\OpenGlSharp\OpenGlSharp.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
+	</ItemGroup>
+
+</Project>

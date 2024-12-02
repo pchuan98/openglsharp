@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 
 namespace OpenGlSharp.Models;
 
-public class Shader : IDisposable
+public partial class Shader : IDisposable
 {
     private readonly GL _gl;
 
@@ -48,4 +48,11 @@ public class Shader : IDisposable
 
         return handle;
     }
+}
+
+partial class Shader
+{
+    public void Uniform1(string name, float value)
+        => _gl.Uniform1(_gl.GetUniformLocation(Handle, name), value);
+
 }
