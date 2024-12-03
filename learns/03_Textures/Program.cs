@@ -140,8 +140,6 @@ public class TextureWindow : DemoWindow
     }
 }
 
-
-
 public class MixTextureWindow : DemoWindow
 {
     private Texture texture1, texture2, texture3;
@@ -268,9 +266,7 @@ public class MipmapTextureWindow : DemoWindow
         uniform float time;
         
         void main(){
-            float scale = 5f;
-
-           	gl_Position = vec4(aPos * (0.0001f + mod(time, scale) * 2 / scale),1.0);
+           	gl_Position = vec4(aPos * (1f / time),1.0);
         
             st = aSt;
         }
@@ -311,7 +307,7 @@ public class MipmapTextureWindow : DemoWindow
         Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 8, 3, 3);
         Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 8, 2, 6);
 
-        Texture = Texture.LoadFromFile(Gl, Path.Join(FileHelper.FindFolder("imgs"), "awesomeface.png"));
+        Texture = Texture.LoadFromFile(Gl, Path.Join(FileHelper.FindFolder("imgs"), "container.jpg"));
     }
 
     public override unsafe void Load()

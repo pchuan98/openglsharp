@@ -32,39 +32,25 @@ partial class Texture
 
         Bind();
 
-        var level = 0;
-
-        width *= 2;
-        height *= 2;
-
-        while (true)
+        // todo 这里要写更好用的mipmap q
+        fixed (void* ptr = &data[0])
         {
-            width /= 2;
-            height /= 2;
+            _gl.TexImage2D(
+                TextureTarget.Texture2D,
+                0,
+                InternalFormat.Rgba,
+                width,
+                height,
+                0,
+                PixelFormat.Rgba,
+                PixelType.UnsignedByte,
+                ptr);
 
-            width = width > 0 ? width : 1;
-            height = height > 0 ? height : 1;
-
-            // todo 这里要写更好用的mipmap q
-            fixed (void* ptr = &data[0])
-            {
-                _gl.TexImage2D(
-                    TextureTarget.Texture2D,
-                    level++,
-                    InternalFormat.Rgba,
-                    width,
-                    height,
-                    0,
-                    PixelFormat.Rgba,
-                    PixelType.UnsignedByte,
-                    ptr);
-
-                action ??= SetParams;
-                action?.Invoke();
-            }
-
-            if (width == 1 && height == 1) break;
+            action ??= SetParams;
+            action?.Invoke();
         }
+
+        _gl.GenerateMipmap(TextureTarget.Texture2D);
     }
 
     public static Texture LoadFromFile(GL gl, string file, Action? action = null)
@@ -96,7 +82,7 @@ partial class Texture
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)GLEnum.ClampToEdge);
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)GLEnum.ClampToEdge);
 
-        // algorithm
+        // filter
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.NearestMipmapLinear);
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Nearest);
     }
