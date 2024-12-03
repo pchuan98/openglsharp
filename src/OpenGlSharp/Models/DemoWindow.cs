@@ -22,6 +22,8 @@ partial class DemoWindow
 
     protected Shader Shader { get; set; } = null!;
 
+    public Texture Texture { get; set; } = null!;
+
     // todo texture
 
     /// <summary>

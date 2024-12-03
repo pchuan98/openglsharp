@@ -6,6 +6,10 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="StbImageSharp" Version="2.30.15" />
+	</ItemGroup>
+
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>

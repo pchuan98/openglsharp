@@ -50,9 +50,12 @@ public partial class Shader : IDisposable
     }
 }
 
+// todo 使用更加抽象的方式写这个
 partial class Shader
 {
     public void Uniform1(string name, float value)
         => _gl.Uniform1(_gl.GetUniformLocation(Handle, name), value);
 
+    public void Uniform1(string name, int value)
+        => _gl.Uniform1(_gl.GetUniformLocation(Handle, name), value);
 }

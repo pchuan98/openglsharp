@@ -1,7 +1,10 @@
 ﻿using OpenGlSharp.Extensions;
+using OpenGlSharp.Helper;
 using OpenGlSharp.Models;
 using Serilog;
 using Silk.NET.OpenGL;
+using StbImageSharp;
+using Texture = OpenGlSharp.Models.Texture;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.WithCallerInfo(["OpenGlSharp", "OpenGlSharp.Study"])
@@ -11,17 +14,17 @@ Log.Logger = new LoggerConfiguration()
                                      "{Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
-
 var window = new ShaderWindow();
 window.Run();
 
 public class ShaderWindow : DemoWindow
 {
+    // xyz rgb st
     private static readonly float[] _vertext =
     [
-        0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // bottom left
-        0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // top 
+        0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,     0.0f,0.0f,
+        -0.5f, -0.5f, 0.0f,    0.0f, 1.0f, 0.0f,     1.0f,0.0f,
+        0.0f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,     0.5f,1.0f
     ];
 
     private static readonly uint[] Index = [0, 1, 2];
@@ -31,44 +34,35 @@ public class ShaderWindow : DemoWindow
         #version 330 core
         
         layout(location=0) in vec3 aPos;
-        layout(location=1) in vec3 aColor;
-        
-        out vec3 color;
-        out vec3 position;
+        layout(location=2) in vec2 aSt;
+
+        out vec2 st;
 
         uniform float time;
         
         void main(){
-            float offset = cos(time) * 0.5;
+           	gl_Position = vec4(aPos,1.0);
         
-           	gl_Position = vec4(aPos.x + offset ,aPos.y ,aPos.z,1.0);
-            color = aColor * (cos(time) + 1.0) / 2.0;
-        
-            position = aPos;
+            st = aSt;
         }
         """;
 
     private static readonly string _fragmentShader
         = """
           #version 330 core
-          
-          in vec3 color;
-          in vec3 position;
-          
+          in vec2 st;
+
           out vec4 FragColor;
           
-          uniform float time;
-          
+          uniform sampler2D sampler;
+
           void main(){
-              
-              float intensity = (sin(time)+1.0)/2.0;
-          
-              FragColor = vec4(vec3(intensity) + color ,1f);
+              FragColor = texture(sampler,st);
           }
           """;
 
 
-    public void LoadValue()
+    public unsafe void LoadValue()
     {
         SetShader(_vertexShader, _fragmentShader);
 
@@ -76,8 +70,12 @@ public class ShaderWindow : DemoWindow
         SetEbo(Index);
 
         SetVao();
-        Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 6, 3, 0);
-        Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 6, 3, 3);
+        Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 8, 3, 0);
+        Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 8, 3, 3);
+        Vao.AddVertexAttributePointer(VertexAttribPointerType.Float, 8, 2, 6);
+
+        Texture = Texture.LoadFromFile(Gl, Path.Join(FileHelper.FindFolder("imgs"), "awesomeface.png"));
+        Texture.SetParams();
     }
 
     public override unsafe void Load()
@@ -96,9 +94,7 @@ public class ShaderWindow : DemoWindow
         base.Render(v);
 
         Shader.Use();
-        Shader?.Uniform1(
-            "time",
-            (float)(2 * Math.PI * (DateTime.Now - t).TotalMilliseconds / (T * 1000f)));
+        Shader?.Uniform1("sampler", 0);
 
         Vao.Bind();
 
