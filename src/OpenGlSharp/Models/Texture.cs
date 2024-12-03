@@ -1,4 +1,5 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Core.Native;
+using Silk.NET.OpenGL;
 using StbImageSharp;
 
 namespace OpenGlSharp.Models;
@@ -23,29 +24,50 @@ partial class Texture
     /// </param>
     /// <param name="width"></param>
     /// <param name="height"></param>
-    public unsafe Texture(GL gl, Span<byte> data, uint width, uint height)
+    /// <param name="action"></param>
+    public unsafe Texture(GL gl, Span<byte> data, uint width, uint height, Action? action = null)
     {
         _gl = gl;
         Handle = _gl.GenTexture();
 
         Bind();
 
-        fixed (void* ptr = &data[0])
+        var level = 0;
+
+        width *= 2;
+        height *= 2;
+
+        while (true)
         {
-            _gl.TexImage2D(
-                TextureTarget.Texture2D,
-                0,
-                InternalFormat.Rgba,
-                width,
-                height,
-                0,
-                PixelFormat.Rgba,
-                PixelType.UnsignedByte,
-                ptr);
+            width /= 2;
+            height /= 2;
+
+            width = width > 0 ? width : 1;
+            height = height > 0 ? height : 1;
+
+            // todo 这里要写更好用的mipmap q
+            fixed (void* ptr = &data[0])
+            {
+                _gl.TexImage2D(
+                    TextureTarget.Texture2D,
+                    level++,
+                    InternalFormat.Rgba,
+                    width,
+                    height,
+                    0,
+                    PixelFormat.Rgba,
+                    PixelType.UnsignedByte,
+                    ptr);
+
+                action ??= SetParams;
+                action?.Invoke();
+            }
+
+            if (width == 1 && height == 1) break;
         }
     }
 
-    public static Texture LoadFromFile(GL gl, string file)
+    public static Texture LoadFromFile(GL gl, string file, Action? action = null)
     {
         if (!File.Exists(file))
             throw new FileNotFoundException("Image file not found", file);
@@ -56,7 +78,7 @@ partial class Texture
         if (img is null)
             throw new InvalidOperationException("Image load failed");
 
-        return new Texture(gl, img.Data, (uint)img.Width, (uint)img.Height);
+        return new Texture(gl, img.Data, (uint)img.Width, (uint)img.Height, action);
     }
 }
 
@@ -64,19 +86,18 @@ partial class Texture
 {
     public void Bind(TextureUnit slot = TextureUnit.Texture0)
     {
-        _gl.ActiveTexture(TextureUnit.Texture0);
+        _gl.ActiveTexture(slot);
         _gl.BindTexture(TextureTarget.Texture2D, Handle);
     }
 
-    // must call when init
-    public virtual void SetParams()
+    public void SetParams()
     {
         // Wrap strq -> xyz coor
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)GLEnum.ClampToEdge);
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)GLEnum.ClampToEdge);
 
         // algorithm
-        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.Linear);
+        _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)GLEnum.NearestMipmapLinear);
         _gl.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Nearest);
     }
 }
