@@ -58,4 +58,13 @@ partial class Shader
 
     public void Uniform1(string name, int value)
         => _gl.Uniform1(_gl.GetUniformLocation(Handle, name), value);
+
+    public void UniformMatrix33(string name, Span<float> matrix, bool transpose = true)
+        => _gl.UniformMatrix3(_gl.GetUniformLocation(Handle, name), transpose, matrix);
+
+    public void UniformMatrix44(string name, Span<float> matrix, bool transpose = true)
+        => _gl.UniformMatrix4(_gl.GetUniformLocation(Handle, name), transpose, matrix);
+
+    public void UniformMatrix33(string name, Span<double> matrix, bool transpose = true)
+        => _gl.UniformMatrix3(_gl.GetUniformLocation(Handle, name), transpose, matrix);
 }
