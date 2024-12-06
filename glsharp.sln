@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "03_Textures", "learns\03_Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "04_Transformation", "learns\04_Transformation\04_Transformation.csproj", "{68AAF38C-DE20-4F69-905D-EED118975AAB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGlSharp.Benchmark", "benchmark\OpenGlSharp.Benchmark\OpenGlSharp.Benchmark.csproj", "{249B7016-A7C2-4469-8318-D5575026E0DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{68AAF38C-DE20-4F69-905D-EED118975AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68AAF38C-DE20-4F69-905D-EED118975AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68AAF38C-DE20-4F69-905D-EED118975AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{249B7016-A7C2-4469-8318-D5575026E0DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{249B7016-A7C2-4469-8318-D5575026E0DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{249B7016-A7C2-4469-8318-D5575026E0DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{249B7016-A7C2-4469-8318-D5575026E0DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

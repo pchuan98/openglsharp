@@ -266,7 +266,7 @@ public class MipmapTextureWindow : DemoWindow
         uniform float time;
         
         void main(){
-           	gl_Position = vec4(aPos * (1f / time),1.0);
+           	gl_Position = vec4(aPos * 2*sin(time),1.0);
         
             st = aSt;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using OpenGlSharp.Utils;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
@@ -10,7 +11,7 @@ public partial class DemoWindow;
 // window
 partial class DemoWindow
 {
-    private static IWindow _window = null!;
+    protected static IWindow WindowObj = null!;
 
     protected GL Gl { get; private set; } = null!;
 
@@ -23,6 +24,8 @@ partial class DemoWindow
     protected Shader Shader { get; set; } = null!;
 
     public Texture Texture { get; set; } = null!;
+
+    protected FpsUtil Fps { get; set; } = new();
 
     // todo texture
 
@@ -41,17 +44,26 @@ partial class DemoWindow
         options.Size = new Vector2D<int>(width, height);
         options.Title = title;
 
-        _window = Window.Create(options);
+        WindowObj = Window.Create(options);
 
-        _window.Load += Load;
-        _window.Render += Render;
-        _window.Resize += Resize;
+        WindowObj.Load += Load;
+        WindowObj.Render += Render;
+        WindowObj.Resize += Resize;
+
+        Task.Run(async () =>
+        {
+            while (true)
+            {
+                await Task.Delay(100);
+                WindowObj.Title = $"{title} ({Fps.Fps:F2})";
+            }
+        });
     }
 
     public void Run()
     {
-        _window.Run();
-        _window.Dispose();
+        WindowObj.Run();
+        WindowObj.Dispose();
     }
 }
 
@@ -60,7 +72,7 @@ partial class DemoWindow
 {
     public virtual unsafe void Load()
     {
-        Gl = GL.GetApi(_window);
+        Gl = GL.GetApi(WindowObj);
 
         Gl.ClearColor(Color.Gray);
     }
@@ -72,6 +84,7 @@ partial class DemoWindow
     public virtual unsafe void Render(double v)
     {
         Gl.Clear(ClearBufferMask.ColorBufferBit);
+        Fps.Frame();
     }
 }
 
