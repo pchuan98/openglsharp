@@ -8,6 +8,7 @@
 
 using MathNet.Numerics.LinearAlgebra;
 using BenchmarkDotNet.Attributes;
+using System.Numerics;
 
 namespace OpenGlSharp.Benchmark.Others;
 
@@ -57,6 +58,32 @@ file static class MatrixCalMethod
         }
     }
 
+    public static float[] DotProductByMatrix4x4(float[] a, float[] b)
+    {
+        var ma = new Matrix4x4(
+            a[0], a[1], a[2], a[3],
+            a[4], a[5], a[6], a[7],
+            a[8], a[9], a[10], a[11],
+            a[12], a[13], a[14], a[15]
+        );
+        
+        var mb = new Matrix4x4(
+            b[0], b[1], b[2], b[3],
+            b[4], b[5], b[6], b[7],
+            b[8], b[9], b[10], b[11],
+            b[12], b[13], b[14], b[15]
+        );
+        
+        var result = Matrix4x4.Multiply(ma, mb);
+        return new[]
+        {
+            result.M11, result.M12, result.M13, result.M14,
+            result.M21, result.M22, result.M23, result.M24,
+            result.M31, result.M32, result.M33, result.M34,
+            result.M41, result.M42, result.M43, result.M44
+        };
+    }
+
     #endregion
 }
 
@@ -82,12 +109,13 @@ public class MatrixCalBenchmark
         {
             var result1 = MatrixCalMethod.DotProductByMathNet(a, b);
             var result2 = MatrixCalMethod.DotProductBySpan(a, b);
+            var result3 = MatrixCalMethod.DotProductByMatrix4x4(a, b);
 
             for (int i = 0; i < 16; i++)
             {
-                if (Math.Abs(result1[i] - result2[i]) > 1e-6f)
+                if (Math.Abs(result1[i] - result2[i]) > 1e-6f || Math.Abs(result1[i] - result3[i]) > 1e-6f)
                 {
-                    throw new Exception($"计算结果不一致！位置: {i}, MathNet: {result1[i]}, Span: {result2[i]}");
+                    throw new Exception($"计算结果不一致！位置: {i}, MathNet: {result1[i]}, Span: {result2[i]}, Matrix4x4: {result3[i]}");
                 }
             }
         }
@@ -109,6 +137,15 @@ public class MatrixCalBenchmark
         foreach (var (a, b) in _testMatrices)
         {
             MatrixCalMethod.DotProductBySpan(a, b);
+        }
+    }
+
+    [Benchmark]
+    public void Matrix4x4Dot()
+    {
+        foreach (var (a, b) in _testMatrices)
+        {
+            MatrixCalMethod.DotProductByMatrix4x4(a, b);
         }
     }
 
