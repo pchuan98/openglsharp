@@ -74,7 +74,7 @@ partial class DemoWindow
     {
         Gl = GL.GetApi(WindowObj);
 
-        Gl.ClearColor(Color.Gray);
+        Gl.ClearColor(Color.CadetBlue);
     }
 }
 

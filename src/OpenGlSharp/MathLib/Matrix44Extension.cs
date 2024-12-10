@@ -1,17 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace OpenGlSharp.MathLib;
+﻿namespace OpenGlSharp.MathLib;
 
 /// <summary>
 /// 4x4矩阵计算
 /// </summary>
 public static class Matrix44Extension
 {
+    public static float[] One = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+
+    /// <summary>
+    /// 矩阵转置
+    /// </summary>
+    /// <param name="matrix"></param>
+    /// <returns></returns>
+    public static float[] T(this float[] matrix)
+    {
+        if (matrix.Length != 16)
+            throw new ArgumentException("must be a 4 x 4 matrix");
+
+        return [
+            matrix[0], matrix[4], matrix[8], matrix[12],
+            matrix[1], matrix[5], matrix[9], matrix[13],
+            matrix[2], matrix[6], matrix[10], matrix[14],
+            matrix[3], matrix[7], matrix[11], matrix[15]];
+    }
+
     /// <summary>
     /// a . b 点乘
     /// </summary>
@@ -21,8 +33,13 @@ public static class Matrix44Extension
     public static float[] DotProduct(this float[] a, float[] b)
     {
         var result = new float[16];
-        DotProductBySpan(a.AsSpan(), b.AsSpan(), result.AsSpan());
-        return result;
+
+        var ta = a.T();
+        var tb = b.T();
+
+        DotProductBySpan(tb.AsSpan(), ta.AsSpan(), result.AsSpan());
+
+        return result.T();
     }
 
     /// <summary>
