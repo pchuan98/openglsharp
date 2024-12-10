@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace OpenGlSharp.Utils;
+namespace Learn.Share;
 
 public class FpsUtil
 {

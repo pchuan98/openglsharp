@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>c9a3f6b4-99f5-4744-948d-b2bb33d0a2c0</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Learn.Share</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)FileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FpsUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)InnerErrorExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathLib\MathHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathLib\Matrix44Extension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathLib\ModelTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathLib\ProjectionTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathLib\Vector4Extension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathLib\ViewTransformation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\BufferObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DemoWindow1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Shader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Texture.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\VertextArrrayObject.cs" />
+  </ItemGroup>
+</Project>

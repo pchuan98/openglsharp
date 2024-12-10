@@ -3,12 +3,12 @@ using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 
-namespace OpenGlSharp.Models;
+namespace Learn.Share.Models;
 
-public partial class DemoWindow;
+public partial class DemoWindow1;
 
 // window
-partial class DemoWindow
+public partial class DemoWindow1
 {
     protected static IWindow WindowObj = null!;
 
@@ -24,7 +24,7 @@ partial class DemoWindow
 
     public Texture Texture { get; set; } = null!;
 
-    protected FpsTimer Fps { get; set; } = new();
+    protected FpsUtil Fps { get; set; } = new();
 
     // todo texture
 
@@ -34,7 +34,7 @@ partial class DemoWindow
     /// <param name="title"></param>
     /// <param name="width"></param>
     /// <param name="height"></param>
-    public DemoWindow(
+    public DemoWindow1(
         string title = "demo",
         int width = 600,
         int height = 600)
@@ -67,7 +67,7 @@ partial class DemoWindow
 }
 
 // load
-partial class DemoWindow
+public partial class DemoWindow1
 {
     public virtual unsafe void Load()
     {
@@ -79,7 +79,7 @@ partial class DemoWindow
 }
 
 // render
-partial class DemoWindow
+public partial class DemoWindow1
 {
     public virtual unsafe void Render(double v)
     {
@@ -89,7 +89,7 @@ partial class DemoWindow
 }
 
 // Resize
-partial class DemoWindow
+public partial class DemoWindow1
 {
     public virtual unsafe void Resize(Vector2D<int> size)
     {
@@ -98,7 +98,7 @@ partial class DemoWindow
 }
 
 // others
-partial class DemoWindow
+public partial class DemoWindow1
 {
     public void SetShader(string vertext, string fragment)
         => Shader = new Shader(Gl, vertext, fragment);

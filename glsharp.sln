@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenGlSharp.Benchmark", "be
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "05_Camera", "learns\05_Camera\05_Camera.csproj", "{B998D003-66FF-4739-B0EC-2C0C268A21BD}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Learn.Share", "learns\Learn.Share\Learn.Share.shproj", "{C9A3F6B4-99F5-4744-948D-B2BB33D0A2C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,8 +80,17 @@ Global
 		{5F437CAA-B18D-4675-8FBF-AB391DBE274D} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{68AAF38C-DE20-4F69-905D-EED118975AAB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B998D003-66FF-4739-B0EC-2C0C268A21BD} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C9A3F6B4-99F5-4744-948D-B2BB33D0A2C0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C720B245-054F-4054-8082-04268DAF3862}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		learns\Learn.Share\Learn.Share.projitems*{5f437caa-b18d-4675-8fbf-ab391dbe274d}*SharedItemsImports = 5
+		learns\Learn.Share\Learn.Share.projitems*{68aaf38c-de20-4f69-905d-eed118975aab}*SharedItemsImports = 5
+		learns\Learn.Share\Learn.Share.projitems*{7f4d829a-09f4-4ecb-8bea-fc172e64bdb0}*SharedItemsImports = 5
+		learns\Learn.Share\Learn.Share.projitems*{b998d003-66ff-4739-b0ec-2c0c268a21bd}*SharedItemsImports = 5
+		learns\Learn.Share\Learn.Share.projitems*{c7e177b3-4380-4765-888b-c41fbca8d6f6}*SharedItemsImports = 5
+		learns\Learn.Share\Learn.Share.projitems*{c9a3f6b4-99f5-4744-948d-b2bb33d0a2c0}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

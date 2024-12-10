@@ -1,24 +1,12 @@
-﻿using OpenGlSharp.Extensions;
-using OpenGlSharp.Models;
-using Serilog;
+﻿using Learn.Share.Models;
 using Silk.NET.OpenGL;
-using Shader = OpenGlSharp.Models.Shader;
-
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithCallerInfo(["OpenGlSharp", "OpenGlSharp.Study"])
-    .MinimumLevel.Verbose()
-    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:}] " +
-                                     "[{Namespace} | {Method}] " +
-                                     "{Message:lj}{NewLine}{Exception}")
-    .CreateLogger();
-
-
+using Shader = Learn.Share.Models.Shader;
 
 var window = new TriangleWindow();
 
 window.Run();
 
-public class TriangleWindow : DemoWindow
+public class TriangleWindow : DemoWindow1
 {
     private static readonly float[] _firstTriangle =
     [

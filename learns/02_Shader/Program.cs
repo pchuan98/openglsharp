@@ -1,21 +1,10 @@
-﻿using OpenGlSharp.Extensions;
-using OpenGlSharp.Models;
-using Serilog;
+﻿using Learn.Share.Models;
 using Silk.NET.OpenGL;
-
-Log.Logger = new LoggerConfiguration()
-    .Enrich.WithCallerInfo(["OpenGlSharp", "OpenGlSharp.Study"])
-    .MinimumLevel.Verbose()
-    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:}] " +
-                                     "[{Namespace} | {Method}] " +
-                                     "{Message:lj}{NewLine}{Exception}")
-    .CreateLogger();
-
 
 var window = new ShaderWindow();
 window.Run();
 
-public class ShaderWindow : DemoWindow
+public class ShaderWindow : DemoWindow1
 {
     private static readonly float[] _vertext =
     [

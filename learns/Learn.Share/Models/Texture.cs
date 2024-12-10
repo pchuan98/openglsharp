@@ -1,7 +1,7 @@
 ﻿using Silk.NET.OpenGL;
 using StbImageSharp;
 
-namespace OpenGlSharp.Models;
+namespace Learn.Share.Models;
 
 public partial class Texture : IDisposable
 {

@@ -1,6 +1,6 @@
 ﻿using StbImageSharp;
 
-namespace OpenGlSharp.Helper;
+namespace Learn.Share;
 
 public static class FileHelper
 {
