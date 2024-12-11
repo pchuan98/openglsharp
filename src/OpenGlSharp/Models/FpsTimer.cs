@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace OpenGlSharp.Models;
 
@@ -13,7 +13,7 @@ public class FpsTimer
     private int _frameCount;
     private long _totalFrameTime;
 
-    public FpsTimer(int bufferSize = 1000)
+    public FpsTimer(int bufferSize = 200)
     {
         bufferSize = Math.Max(1, bufferSize);
         _frameTimes = new int[bufferSize];

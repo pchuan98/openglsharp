@@ -1,6 +1,6 @@
-﻿using Serilog;
+using Serilog;
 
-namespace OpenGlSharp.Extensions.Serilog;
+namespace OpenGlSharp.Extensions;
 
 /// <summary>
 /// 快捷使用的extension

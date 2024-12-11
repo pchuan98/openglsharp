@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+using System.Drawing;
+using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
@@ -10,21 +11,25 @@ public partial class DemoWindow;
 // window
 partial class DemoWindow
 {
-    protected static IWindow WindowObj = null!;
+    public static IWindow WindowObj = null!;
 
-    protected GL Gl { get; private set; } = null!;
+    public GL Gl { get; private set; } = null!;
 
-    protected VertextArrrayObject<float, uint> Vao { get; set; } = null!;
+    public VertextArrrayObject<float, uint> Vao { get; set; } = null!;
 
-    protected BufferObject<float> Vbo { get; set; } = null!;
+    public BufferObject<float> Vbo { get; set; } = null!;
 
-    protected BufferObject<uint> Ebo { get; set; } = null!;
+    public BufferObject<uint> Ebo { get; set; } = null!;
 
-    protected Shader Shader { get; set; } = null!;
+    public Shader Shader { get; set; } = null!;
 
     public Texture Texture { get; set; } = null!;
 
+    public IInputContext Input { get; set; }
+
     protected FpsTimer Fps { get; set; } = new();
+
+    public float Time { get; private set; }
 
     // todo texture
 
@@ -49,6 +54,7 @@ partial class DemoWindow
         WindowObj.Render += Render;
         WindowObj.Resize += Resize;
 
+
         Task.Run(async () =>
         {
             while (true)
@@ -64,27 +70,62 @@ partial class DemoWindow
         WindowObj.Run();
         WindowObj.Dispose();
     }
+
+    public void Stop() => WindowObj.Close();
 }
 
 // load
 partial class DemoWindow
 {
+    public event Action<IWindow> OnLoad;
+
     public virtual unsafe void Load()
     {
         Gl = GL.GetApi(WindowObj);
 
         Gl.ClearColor(Color.White);
         Gl.Enable(EnableCap.DepthTest);
+
+        Input = WindowObj.CreateInput();
+        _keyboard = Input.Keyboards.FirstOrDefault();
+
+        if (_keyboard is null) throw new Exception();
+
+        OnLoad?.Invoke(WindowObj);
+
+        _keyboard.KeyDown += (_, key, _) =>
+        {
+            _key = key;
+            Interlocked.Increment(ref _keyCount);
+        };
+        _keyboard.KeyUp += (_, _, _) => Interlocked.Decrement(ref _keyCount);
     }
 }
 
 // render
 partial class DemoWindow
 {
+    public event Action<IWindow>? OnRender;
+
+    public event Action<IKeyboard, Key?>? OnKeyPressed;
+
+    private IKeyboard? _keyboard;
+
+    private Key? _key;
+
+    private volatile int _keyCount = 0;
+
+    private readonly DateTime _timeStart = DateTime.Now;
+
     public virtual unsafe void Render(double v)
     {
         Gl.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         Fps.Frame();
+
+        Time = (float)(DateTime.Now - _timeStart).TotalSeconds;
+
+        OnKeyPressed?.Invoke(_keyboard!, _keyCount == 0 ? null : _key);
+        OnRender?.Invoke(WindowObj);
     }
 }
 

@@ -1,4 +1,4 @@
-﻿using Learn.Share.Models;
+using Learn.Share.Models;
 using Silk.NET.OpenGL;
 
 var window = new ShaderWindow();

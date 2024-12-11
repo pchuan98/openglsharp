@@ -8,4 +8,6 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+	<Import Project=".\Learn.Share\Learn.Share.projitems" Label="Shared" />
+
 </Project>

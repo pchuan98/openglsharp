@@ -1,10 +1,9 @@
-﻿using Learn.Share;
+using Learn.Share;
 using Learn.Share.Models;
 using Silk.NET.OpenGL;
 using Texture = Learn.Share.Models.Texture;
 
 namespace _03_Textures;
-
 
 public class MipmapTextureWindow : DemoWindow1
 {

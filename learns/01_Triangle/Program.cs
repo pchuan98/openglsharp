@@ -1,4 +1,4 @@
-﻿using Learn.Share.Models;
+using Learn.Share.Models;
 using Silk.NET.OpenGL;
 using Shader = Learn.Share.Models.Shader;
 
