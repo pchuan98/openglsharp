@@ -1,24 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OpenGlSharp.Extensions.Math;
 
 namespace OpenGlSharp.Models;
 
 public sealed class PerspectiveCamera : Camera
 {
-    public override Matrix ProjectionMatrix { get; init; }
+    public override Matrix ProjectionMatrix
+        => Matrix.CreatePerspectiveFieldOfView(Fov.AsRadian(), Aspect, NearPlane, FarPlane);
 
     /// <summary>
-    /// 
+    /// fov by degree
     /// </summary>
-    /// <param name="fov"></param>
-    /// <param name="aspect"></param>
-    /// <param name="near"></param>
-    /// <param name="far"></param>
-    public PerspectiveCamera(float fov, float aspect, float near = 0.1f, float far = 1000f)
-    {
-        ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(fov, aspect, near, far);
-    }
+    public float Fov { get; set; } = 45f;
+
+    /// <summary>
+    /// width / height
+    /// </summary>
+    public float Aspect { get; set; } = 1f;
+
+    /// <summary>
+    /// 近平面 > 0
+    /// </summary>
+    public float NearPlane { get; set; } = 0.1f;
+
+    /// <summary>
+    /// 远平面 > near > 0
+    /// </summary>
+    public float FarPlane { get; set; } = 100f;
 }

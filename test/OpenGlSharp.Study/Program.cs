@@ -1,9 +1,11 @@
 using System.Numerics;
+using System.Runtime.Serialization;
 using OpenGlSharp.Extensions;
 using OpenGlSharp.Extensions.Math;
 using OpenGlSharp.Helper;
 using OpenGlSharp.Models;
 using Silk.NET.Input;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Texture = OpenGlSharp.Models.Texture;
 
@@ -11,18 +13,8 @@ Serilog.Log.Logger.ConfigLoggerDefault();
 
 var demo = new DemoWindow();
 
-var position = new Vector3();
-var speed = 0.05f;
-
-var front = new Vector3(0, 0, -1);
-
-var pitch = 0f;
-var yaw = -90f;
-var roll = 0f;
-
-var up = new Vector3(0, 1, 0);
-
-var fov = 45f;
+var control = new GameCameraController(new PerspectiveCamera());
+var speed = 0.1f;
 
 Vector2? lastMouse = null;
 
@@ -34,14 +26,20 @@ demo.OnKeyPressed += (kb, k) =>
     if (k == Key.Escape)
         demo.Stop();
 
+    var offset = Vector3.Zero;
+
     if (kb.IsKeyPressed(Key.W))
-        position += speed * front;
+        offset.Z += speed;
     if (kb.IsKeyPressed(Key.S))
-        position -= speed * front;
+        offset.Z -= speed;
     if (kb.IsKeyPressed(Key.A))
-        position -= speed * Vector3.Normalize(Vector3.Cross(front, up));
+        offset.X -= speed;
     if (kb.IsKeyPressed(Key.D))
-        position += speed * Vector3.Normalize(Vector3.Cross(front, up));
+        offset.X += speed;
+    if (kb.IsKeyPressed(Key.R))
+        control.Reset();
+
+    control.Translate(offset);
 
 };
 
@@ -64,30 +62,20 @@ demo.OnLoad += w =>
             var offset = vector - (Vector2)lastMouse;
             lastMouse = vector;
 
-            yaw += (offset.X * sensitivity);
-            pitch -= (offset.Y * sensitivity);
+            var yaw = offset.X * sensitivity;
+            var pitch = -offset.Y * sensitivity;
 
-            pitch = float.Clamp(pitch, -89, 89); // [-90,90]
-            yaw = float.Clamp(yaw, -179, 179); // (-180,180]
-            roll = float.Clamp(roll, -179, 179); // (-180,180]
-
-            var pr = pitch.AsRadian();
-            var yr = yaw.AsRadian();
-
-            var x = float.Cos(yr) * float.Cos(pr);
-            var y = float.Sin(pr);
-            var z = float.Sin(yr) * float.Cos(pr);
-
-            front = Vector3.Normalize(new Vector3(x, y, z));
-
-            Console.WriteLine($"{yaw:F4}\t,{x:F4}\t,{front.X:F4}");
+            control.RotateByEuler(yaw, pitch, 0);
         });
 
         mouse.Scroll += (m, wheel) =>
         {
-            fov += wheel.Y;
 
-            fov = float.Clamp(fov, 1, 90);
+        };
+
+        mouse.MouseDown += (mouse, button) =>
+        {
+
         };
     }
 
@@ -202,8 +190,8 @@ var proj = Matrix4x4.CreatePerspectiveFieldOfView(
 demo.OnRender += _ =>
 {
     var model = Matrix4x4.Identity;
-    var view = Matrix4x4.CreateLookAt(position, position + front, up);
-    var proj = Matrix4x4.CreatePerspectiveFieldOfView(fov.AsRadian(), 1f, 0.1f, 100f);
+    var view = control.CameraObj.ViewMatrix;
+    var proj = control.CameraObj.ProjectionMatrix;
     demo.Shader.Use();
     demo.Shader.Uniform1("time", demo.Time);
     demo.Shader.UniformMatrix44("model", model);

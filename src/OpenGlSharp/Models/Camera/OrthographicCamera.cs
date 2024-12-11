@@ -1,8 +1,8 @@
-﻿namespace OpenGlSharp.Models;
+namespace OpenGlSharp.Models;
 
 public sealed class OrthographicCamera : Camera
 {
-    public override Matrix ProjectionMatrix { get; init; }
+    public override Matrix ProjectionMatrix { get; }
 
     /// <summary>
     /// 
